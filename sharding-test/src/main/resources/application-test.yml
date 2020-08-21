@@ -1,0 +1,63 @@
+# 开发环境配置
+server:
+  # 服务器的HTTP端口，默认为80
+  port: 19410
+  tomcat:
+    # tomcat的URI编码
+    uri-encoding: UTF-8
+    # tomcat最大线程数，默认为200
+    max-threads: 200
+    # Tomcat启动初始化的线程数，默认值25
+    min-spare-threads: 25
+
+# 日志配置
+logging:
+  path: /SpringLog/huidao-query
+  pattern:
+    level: debug
+
+spring:
+  #使用redisson
+  redis:
+    enable: false
+    mode: sentinel
+
+  #cloud相关配置
+  application:
+    name: multi-request
+  cloud:
+    #nacos配置
+    nacos:
+      #服务发现
+      discovery:
+        server-addr: nacos-headless.default.svc.cluster.local:8848
+        namespace: c2ee7840-b55d-4f3d-b84b-a7f4d0336be0
+        #服务分组  目前只支持DEFAULT_GROUP的数据更新
+        group: DEFAULT_GROUP
+        # 是否开启
+        enabled: true
+        #集群名
+        cluster-name: zhengwuneiwang
+
+    # 限流和升降级
+    sentinel:
+      transport:
+        port: 8719
+        dashboard: sentinel-dashboard-prod-svc.zhicheng-prod.svc.cluster.local:19410
+      datasource:
+        flow:
+          nacos:
+            ruleType: flow
+            serverAddr: nacos-headless.default.svc.cluster.local:8848
+            groupId: "DEFAULT_GROUP"
+            dataId: huidao-query-flow-rules
+            namespace: c2ee7840-b55d-4f3d-b84b-a7f4d0336be0
+        degrade:
+          nacos:
+            ruleType: degrade
+            serverAddr: nacos-headless.default.svc.cluster.local:8848
+            groupId: "DEFAULT_GROUP"
+            dataId: huidao-query-degrade-rules
+            namespace: c2ee7840-b55d-4f3d-b84b-a7f4d0336be0
+      enabled: false
+      eager: true
