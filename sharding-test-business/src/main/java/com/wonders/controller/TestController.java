@@ -1,13 +1,20 @@
 package com.wonders.controller;
 
 import cn.hutool.core.lang.Snowflake;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wonders.config.leaf.SnowflakeService;
+import com.wonders.domain.entity.Banner;
 import com.wonders.domain.entity.OrderTest;
+import com.wonders.domain.entity.ShopTest;
+import com.wonders.domain.entity.Voice;
 import com.wonders.framework.annotion.LoggingFlag;
 import com.wonders.framework.annotion.SaveRequestTimeFlag;
+import com.wonders.service.IBannerService;
 import com.wonders.service.IOrderTestService;
+import com.wonders.service.IShopTestService;
+import com.wonders.service.IVoiceService;
 import com.wonders.util.leaf.common.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shardingsphere.core.strategy.keygen.SnowflakeShardingKeyGenerator;
@@ -31,11 +38,21 @@ public class TestController {
     @Autowired
     private IOrderTestService orderTestService;
 
+    @Autowired
+    private IBannerService bannerService;
+
+    @Autowired
+    private IVoiceService voiceService;
+
+    @Autowired
+    private IShopTestService shopTestService;
+
     @PostMapping("/testInsertOrder")
     @LoggingFlag(logging = true)
     @SaveRequestTimeFlag
     @ResponseBody
     public OrderTest testInsertOrder(@RequestBody OrderTest orderTest){
+        orderTest.setOrderId(null);
         orderTestService.save(orderTest);
         return orderTest;
     }
@@ -58,6 +75,49 @@ public class TestController {
             queryWrapper.eq("user_id",userId);
         }
         return orderTestService.list(queryWrapper);
+    }
+
+    @GetMapping("/testListBanner")
+    @LoggingFlag(logging = true)
+    @SaveRequestTimeFlag
+    @ResponseBody
+    public List<Banner> testListBanner(){
+        return bannerService.list();
+    }
+
+    @GetMapping("/testGetVoice")
+    @LoggingFlag(logging = true)
+    @SaveRequestTimeFlag
+    @ResponseBody
+    public Voice testGetVoice(@RequestBody Voice voice){
+        String name = voice.getName();
+        if(StrUtil.isBlank(name)){
+            return null;
+        }
+        QueryWrapper<Voice> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("name",name);
+        return voiceService.getOne(queryWrapper);
+    }
+
+    @GetMapping("/testGetShop")
+    @LoggingFlag(logging = true)
+    @SaveRequestTimeFlag
+    @ResponseBody
+    public ShopTest testGetShop(@RequestBody ShopTest shopTest){
+        Long sId = shopTest.getSId();
+        if(sId == null){
+            return null;
+        }
+        return shopTestService.getById(sId);
+    }
+
+    @PostMapping("/testInsertShop")
+    @LoggingFlag(logging = true)
+    @SaveRequestTimeFlag
+    @ResponseBody
+    public ShopTest testInsertShop(@RequestBody ShopTest shopTest){
+        shopTestService.save(shopTest);
+        return shopTest;
     }
 
     @Autowired

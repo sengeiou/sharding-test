@@ -84,7 +84,7 @@ public class DataSourceConfig {
             String validationQuery = dsProperty.getValidationQuery();
             ds.setValidationQuery(validationQuery);
             String dsname = dsProperty.getDsname();
-            //ds.setName(dsname);
+            ds.setName(dsname);
             dataSourceMap.put(dsname,ds);
         }
         Properties properties = new Properties();
