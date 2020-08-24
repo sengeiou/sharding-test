@@ -20,17 +20,21 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("order_test")
-public class OrderTest implements Serializable {
+@TableName("order_item_test")
+public class OrderItemTest implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "order_id", type = IdType.AUTO)
+    @TableId(value = "order_item_id", type = IdType.AUTO)
+    private Long orderItemId;
+
     private Long orderId;
 
-    private String paySum;
-
     private Long userId;
+
+    private String name;
+
+    private Integer unitCount;
 
 
 }

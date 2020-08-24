@@ -4,13 +4,15 @@
  
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.wonders.domain.entity.OrderTest">
-        <id column="id" property="id"/>
+        <id column="order_id" property="orderId"/>
         <result column="pay_sum" property="paySum"/>
+        <result column="user_id" property="userId"/>
     </resultMap>
  
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-            t.id,
+            t.order_id,
             t.pay_sum,
+            t.user_id,
     </sql>
 </mapper>

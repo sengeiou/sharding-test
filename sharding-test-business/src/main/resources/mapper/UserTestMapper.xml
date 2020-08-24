@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.wonders.dao.ShopTestMapper">
+<mapper namespace="com.wonders.dao.UserTestMapper">
  
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.wonders.domain.entity.ShopTest">
-        <id column="s_id" property="sId"/>
+    <resultMap id="BaseResultMap" type="com.wonders.domain.entity.UserTest">
+        <id column="user_id" property="userId"/>
         <result column="name" property="name"/>
-        <result column="user_id" property="userId"/>
     </resultMap>
  
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-            t.s_id,
-            t.name,
             t.user_id,
+            t.name,
     </sql>
 </mapper>

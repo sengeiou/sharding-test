@@ -2,19 +2,20 @@ package com.wonders.controller;
 
 import cn.hutool.core.lang.Snowflake;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wonders.config.leaf.SnowflakeService;
+import com.wonders.domain.entity.OrderTest;
 import com.wonders.framework.annotion.LoggingFlag;
 import com.wonders.framework.annotion.SaveRequestTimeFlag;
+import com.wonders.service.IOrderTestService;
 import com.wonders.util.leaf.common.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shardingsphere.core.strategy.keygen.SnowflakeShardingKeyGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -27,17 +28,41 @@ import java.util.Properties;
 @RequestMapping(value = "/test/",produces = "application/json;charset=UTF-8")
 public class TestController {
 
-    @PostMapping("/testInsert")
+    @Autowired
+    private IOrderTestService orderTestService;
+
+    @PostMapping("/testInsertOrder")
     @LoggingFlag(logging = true)
     @SaveRequestTimeFlag
-    public void testInsert()throws BlockException{
-//        SnowflakeShardingKeyGenerator snowflakeShardingKeyGenerator = new SnowflakeShardingKeyGenerator();
-//        Comparable<?> comparable = snowflakeShardingKeyGenerator.generateKey();
-//        System.out.println(comparable);
+    @ResponseBody
+    public OrderTest testInsertOrder(@RequestBody OrderTest orderTest){
+        orderTestService.save(orderTest);
+        return orderTest;
+    }
+
+    @GetMapping("/testGetOrderById")
+    @LoggingFlag(logging = true)
+    @SaveRequestTimeFlag
+    @ResponseBody
+    public List<OrderTest> testGetOrderById(@RequestBody OrderTest orderTest){
+        if(orderTest.getOrderId() == null && orderTest.getUserId() == null){
+            return null;
+        }
+        QueryWrapper<OrderTest> queryWrapper = new QueryWrapper<>();
+        Long orderId = orderTest.getOrderId();
+        Long userId = orderTest.getUserId();
+        if(orderId != null){
+            queryWrapper.eq("order_id",orderId);
+        }
+        if(userId != null){
+            queryWrapper.eq("user_id",userId);
+        }
+        return orderTestService.list(queryWrapper);
     }
 
     @Autowired
     private SnowflakeService snowflakeService;
+
     @GetMapping("/getIdBySnowflake")
     @LoggingFlag(logging = true)
     @SaveRequestTimeFlag
