@@ -9,8 +9,10 @@ import com.wonders.domain.entity.Banner;
 import com.wonders.domain.entity.OrderTest;
 import com.wonders.domain.entity.ShopTest;
 import com.wonders.domain.entity.Voice;
+import com.wonders.domain.result.OrderInsertResult;
 import com.wonders.framework.annotion.LoggingFlag;
 import com.wonders.framework.annotion.SaveRequestTimeFlag;
+import com.wonders.manager.OrderTestManger;
 import com.wonders.service.IBannerService;
 import com.wonders.service.IOrderTestService;
 import com.wonders.service.IShopTestService;
@@ -47,6 +49,9 @@ public class TestController {
     @Autowired
     private IShopTestService shopTestService;
 
+    @Autowired
+    private OrderTestManger orderTestManger;
+
     @PostMapping("/testInsertOrder")
     @LoggingFlag(logging = true)
     @SaveRequestTimeFlag
@@ -56,6 +61,23 @@ public class TestController {
         orderTestService.save(orderTest);
         return orderTest;
     }
+
+    @PostMapping("/testInsertOrderTransaction")
+    @LoggingFlag(logging = true)
+    @SaveRequestTimeFlag
+    @ResponseBody
+    public OrderInsertResult testInsertOrderTransaction(@RequestBody OrderTest orderTest){
+        return orderTestManger.testInsertOrderTransaction(orderTest);
+    }
+
+    @PostMapping("/testInsertOrderTransaction2")
+    @LoggingFlag(logging = true)
+    @SaveRequestTimeFlag
+    @ResponseBody
+    public OrderInsertResult testInsertOrderTransaction2(@RequestBody OrderTest orderTest){
+        return orderTestManger.testInsertOrderTransaction2(orderTest);
+    }
+
 
     @GetMapping("/testGetOrderById")
     @LoggingFlag(logging = true)
@@ -83,6 +105,16 @@ public class TestController {
     @ResponseBody
     public List<Banner> testListBanner(){
         return bannerService.list();
+    }
+
+
+    @PostMapping("/testInsertVoice")
+    @LoggingFlag(logging = true)
+    @SaveRequestTimeFlag
+    @ResponseBody
+    public Voice testInsertVoice(@RequestBody Voice voice){
+        voiceService.save(voice);
+        return voice;
     }
 
     @GetMapping("/testGetVoice")

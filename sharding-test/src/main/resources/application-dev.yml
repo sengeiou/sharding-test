@@ -65,6 +65,7 @@ spring:
   datasource:
     # 数据源模式  single(单数据源,默认) multi(多数据源) sharding(分片) 当mode为multi时  必须将dynamic.enabled设置为true才能生效
     mode: sharding
+    # 单机模式模式
     single:
       username: root
       password: yuchenha
@@ -98,7 +99,7 @@ spring:
       # 合并多个DruidDataSource的监控数据
       useGlobalDataSourceStat: true
 
-    # 分片配置
+    # 分片模式配置
     sharding:
     - dsname: electric_0
       username: root
@@ -132,7 +133,6 @@ spring:
       connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
       # 合并多个DruidDataSource的监控数据
       useGlobalDataSourceStat: true
-
     - dsname: electric_1
       username: root
       password: yuchenha
@@ -165,7 +165,6 @@ spring:
       connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
       # 合并多个DruidDataSource的监控数据
       useGlobalDataSourceStat: true
-
     - dsname: electric_2
       username: root
       password: yuchenha
@@ -198,7 +197,6 @@ spring:
       connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
       # 合并多个DruidDataSource的监控数据
       useGlobalDataSourceStat: true
-
     - dsname: electric_3
       username: root
       password: yuchenha
@@ -231,17 +229,31 @@ spring:
       connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
       # 合并多个DruidDataSource的监控数据
       useGlobalDataSourceStat: true
-
+    # 多数据源模式配置
+    dynamic:
+      enabled: false
+      primary: prod #设置默认的数据源或者数据源组,默认值即为prod
+      datasource:
+        prod:  # 数据源的名字:master
+          username: root
+          password: yuchenha
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://localhost:3306/huidao_prod_0728?serverTimezone=Asia/Shanghai&charset=utf8mb4&useSSL=false
+        test:   # 数据源的名字:slave_1
+          username: root
+          password: yuchenha
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://localhost:3306/huidao_test?serverTimezone=Asia/Shanghai&charset=utf8mb4&useSSL=false
 
 leaf:
-  name: com.sankuai.leaf.opensource.dev
+  name: leaf-dev
   segment:
     enable: false
     jdbcPassword: ''
     jdbcUrl: ''
     jdbcUsername: ''
   snowflake:
-    enable: false
+    enable: true
     twepoch:
     port: '10081'
     zkAddress: 'localhost:2181'

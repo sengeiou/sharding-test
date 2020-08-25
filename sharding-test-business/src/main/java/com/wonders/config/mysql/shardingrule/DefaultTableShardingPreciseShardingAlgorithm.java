@@ -12,7 +12,7 @@ import java.util.Collection;
  * @date 2020/8/24 9:48
  **/
  
-public class OrderPreciseShardingAlgorithm implements PreciseShardingAlgorithm<Long> {
+public class DefaultTableShardingPreciseShardingAlgorithm implements PreciseShardingAlgorithm<Long> {
 
     /**
      * Sharding.
@@ -23,9 +23,6 @@ public class OrderPreciseShardingAlgorithm implements PreciseShardingAlgorithm<L
      */
     @Override
     public String doSharding(Collection<String> availableTargetNames, PreciseShardingValue<Long> shardingValue) {
-        Long value = shardingValue.getValue();
-        long tb = value % 4;
-        String logicTableName = shardingValue.getLogicTableName();
-        return logicTableName+"_"+tb;
+        return shardingValue.getLogicTableName();
     }
 }

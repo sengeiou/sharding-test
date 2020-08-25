@@ -34,16 +34,19 @@ public class SnowflakeIDGenImpl implements IDGen {
     private static final Random RANDOM = new Random();
 
     public SnowflakeIDGenImpl(LeafProperty property) {
-        this(property.getSnowflake().getZkAddress()
+        this(
+                property.getSnowflake().getZkAddress()
                 , property.getSnowflake().getPort()
                 , property.getSnowflake().getTwepoch() == null ? 1288834974657L : property.getSnowflake().getTwepoch()
-                , property.getName());
+                , property.getName()
+        );
     }
 
     /**
      * @param zkAddress zk地址
      * @param port      snowflake监听端口
      * @param twepoch   起始的时间戳
+     * @param name   znode名字
      */
     public SnowflakeIDGenImpl(String zkAddress, int port, long twepoch,String name) {
         this.twepoch = twepoch;

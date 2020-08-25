@@ -1,0 +1,3 @@
+org.apache.shardingsphere.core.strategy.keygen.SnowflakeShardingKeyGenerator
+org.apache.shardingsphere.core.strategy.keygen.UUIDShardingKeyGenerator
+com.wonders.config.mysql.shardingrule.LeafSnowflakeKeyGenerator
