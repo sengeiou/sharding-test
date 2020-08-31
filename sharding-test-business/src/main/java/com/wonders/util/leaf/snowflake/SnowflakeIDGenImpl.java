@@ -98,7 +98,6 @@ public class SnowflakeIDGenImpl implements IDGen {
         lastTimestamp = timestamp;
         long id = ((timestamp - twepoch) << timestampLeftShift) | (workerId << workerIdShift) | sequence;
         return new Result(id, Status.SUCCESS);
-
     }
 
     protected long tilNextMillis(long lastTimestamp) {

@@ -1,7 +1,5 @@
 package com.wonders.domain.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -25,7 +23,7 @@ public class OrderTest implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "order_id", type = IdType.AUTO)
+    //@TableId(value = "order_id", type = IdType.INPUT)
     private Long orderId;
 
     private String paySum;

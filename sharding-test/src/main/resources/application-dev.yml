@@ -14,8 +14,7 @@ server:
 logging:
   path: /SpringLog/shading-test
   pattern:
-    level: debug
-
+    level: info
 
 spring:
 
@@ -64,12 +63,12 @@ spring:
 
   datasource:
     # 数据源模式  single(单数据源,默认) multi(多数据源) sharding(分片) 当mode为multi时  必须将dynamic.enabled设置为true才能生效
-    mode: sharding
+    mode: single
     # 单机模式模式
     single:
       username: root
       password: yuchenha
-      driver-class-name: com.mysql.cj.jdbc.Driver
+      driverClassName: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://localhost:3306/electric_0?serverTimezone=Asia/Shanghai&charset=utf8mb4&useSSL=false
       platform: mysql
       type: com.alibaba.druid.pool.DruidDataSource
@@ -253,7 +252,7 @@ leaf:
     jdbcUrl: ''
     jdbcUsername: ''
   snowflake:
-    enable: true
+    enable: false
     twepoch:
     port: '10081'
     zkAddress: 'localhost:2181'

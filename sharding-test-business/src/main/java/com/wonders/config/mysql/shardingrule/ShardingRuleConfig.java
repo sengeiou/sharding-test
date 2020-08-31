@@ -9,6 +9,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.*;
+import java.net.Socket;
 import java.util.Properties;
 
 /**
@@ -35,6 +37,7 @@ public class ShardingRuleConfig {
 
         shardingRuleConfig.getBroadcastTables().add("voice");
         shardingRuleConfig.getBroadcastTables().add("banner");
+        shardingRuleConfig.getBroadcastTables().add("city");
 
         StandardShardingStrategyConfiguration defaultDSShardingStrategy
                 = new StandardShardingStrategyConfiguration("user_id"
@@ -50,13 +53,16 @@ public class ShardingRuleConfig {
         Properties properties = new Properties();
         properties.setProperty("worker.id","22");
         properties.setProperty("max.vibration.offset","15");
-        KeyGeneratorConfiguration result = new KeyGeneratorConfiguration("SNOWFLAKE", "order_id",properties);
-        return result;
+        return new KeyGeneratorConfiguration("SNOWFLAKE", "order_id",properties);
     }
 
     public TableRuleConfiguration getOrderTestRuleConfiguration() {
         TableRuleConfiguration result = new TableRuleConfiguration("order_test", "electric_${0..3}.order_test_${0..3}");
-        result.setKeyGeneratorConfig(getKeyGeneratorConfiguration());
+        //result.setKeyGeneratorConfig(getKeyGeneratorConfiguration());
+        Properties properties = new Properties();
+        properties.setProperty("worker.id","22");
+        properties.setProperty("max.vibration.offset","15");
+        result.setKeyGeneratorConfig(new KeyGeneratorConfiguration("LEFT-SNOWFLAKE","order_id",properties));
         result.setDatabaseShardingStrategyConfig(new StandardShardingStrategyConfiguration("user_id",new UserPreciseShardingAlgorithm()));
         result.setTableShardingStrategyConfig(new StandardShardingStrategyConfiguration("order_id",new OrderPreciseShardingAlgorithm()));
         return result;
@@ -67,7 +73,8 @@ public class ShardingRuleConfig {
         Properties properties = new Properties();
         properties.setProperty("worker.id","22");
         properties.setProperty("max.vibration.offset","15");
-        result.setKeyGeneratorConfig(new KeyGeneratorConfiguration("LEFT-SNOWFLAKE","order_item_id",properties));
+        //result.setKeyGeneratorConfig(new KeyGeneratorConfiguration("LEFT-SNOWFLAKE","order_item_id",properties));
+        result.setKeyGeneratorConfig(new KeyGeneratorConfiguration("SNOWFLAKE","order_item_id",properties));
         result.setTableShardingStrategyConfig(new StandardShardingStrategyConfiguration("order_id",new OrderPreciseShardingAlgorithm()));
         result.setDatabaseShardingStrategyConfig(new StandardShardingStrategyConfiguration("user_id",new UserPreciseShardingAlgorithm()));
         return result;
@@ -90,6 +97,27 @@ public class ShardingRuleConfig {
 //        properties.setProperty("worker.id","22");
 //        properties.setProperty("max.vibration.offset","15");
 //        result.setKeyGeneratorConfig(new KeyGeneratorConfiguration("SNOWFLAKE","user_id",properties));
+
+
         return result;
+    }
+
+    public static void main(String[] args) throws IOException {
+        Socket socket = new Socket("localhost",9999);
+        OutputStream outputStream = socket.getOutputStream();
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
+        writer.write("GET /health HTTP/1.1 \r\n");
+        writer.write("\r\n");
+        writer.write("\r\n");
+        writer.flush();
+        InputStream inputStream = socket.getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        StringBuilder builder = new StringBuilder();
+        String s;
+        while((s = reader.readLine()) != null){
+            builder.append(s);
+        }
+        inputStream.close();
+        System.out.println(builder);
     }
 }

@@ -3,6 +3,8 @@ package com.wonders.config.mysql.shardingrule;
 import com.wonders.config.leaf.SnowflakeService;
 import com.wonders.util.SpringContextUtils;
 import com.wonders.util.leaf.common.Result;
+import com.wonders.util.leaf.common.Status;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shardingsphere.spi.keygen.ShardingKeyGenerator;
 
 import java.util.Properties;
@@ -13,7 +15,8 @@ import java.util.Properties;
  * @author YuChen
  * @date 2020/8/25 10:05
  **/
- 
+
+@Slf4j
 public class LeafSnowflakeKeyGenerator implements ShardingKeyGenerator {
 
     private SnowflakeService snowflakeService;
@@ -29,6 +32,10 @@ public class LeafSnowflakeKeyGenerator implements ShardingKeyGenerator {
             getService();
         }
         Result res = snowflakeService.getId(null);
+        if(res.getStatus().equals(Status.EXCEPTION)){
+            log.error("获取分布式主键出现异常,res:{}",res);
+            throw new RuntimeException("获取分布式主键出现异常");
+        }
         return res.getId();
     }
 

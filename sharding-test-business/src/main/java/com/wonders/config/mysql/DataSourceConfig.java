@@ -30,7 +30,7 @@ import java.util.Properties;
 public class DataSourceConfig {
 
 
-    @ConfigurationProperties("spring.datasource.druid.single")
+    @ConfigurationProperties("spring.datasource.single")
     @ConditionalOnProperty(prefix = "spring.datasource",name = "mode",havingValue = "single")
     @Bean
     public DataSource dataSourceSingle(){
@@ -88,7 +88,7 @@ public class DataSourceConfig {
             dataSourceMap.put(dsname,ds);
         }
         Properties properties = new Properties();
-        properties.setProperty("sql.show","true");
+        //properties.setProperty("sql.show","true");
         return ShardingDataSourceFactory.createDataSource(dataSourceMap, shardingRuleConfiguration, properties);
     }
 

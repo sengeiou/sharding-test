@@ -1,6 +1,7 @@
 package com.wonders.controller;
 
 import cn.hutool.core.lang.Snowflake;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -51,6 +52,43 @@ public class TestController {
 
     @Autowired
     private OrderTestManger orderTestManger;
+
+    @Autowired
+    private SnowflakeService snowflakeService;
+
+    @PostMapping("/testInsertOrder2")
+    @LoggingFlag(logging = true)
+    @SaveRequestTimeFlag
+    @ResponseBody
+    public Long testInsertOrder2(Long count){
+        long start = System.currentTimeMillis();
+        for (long i = 0; i < count; i++) {
+            OrderTest orderTest = new OrderTest();
+            long userId = RandomUtil.randomLong(1, 1000);
+            orderTest.setUserId(userId);
+            orderTestService.save(orderTest);
+        }
+        long end = System.currentTimeMillis();
+        return end - start;
+    }
+
+    @PostMapping("/testInsertOrder3")
+    @LoggingFlag(logging = true)
+    @SaveRequestTimeFlag
+    @ResponseBody
+    public Long testInsertOrder3(Long count){
+        long start = System.currentTimeMillis();
+        for (long i = 0; i < count; i++) {
+            OrderTest orderTest = new OrderTest();
+            Result id = snowflakeService.getId(null);
+            orderTest.setOrderId(id.getId());
+            long userId = RandomUtil.randomLong(1, 1000);
+            orderTest.setUserId(userId);
+            orderTestService.save(orderTest);
+        }
+        long end = System.currentTimeMillis();
+        return end - start;
+    }
 
     @PostMapping("/testInsertOrder")
     @LoggingFlag(logging = true)
@@ -151,9 +189,6 @@ public class TestController {
         shopTestService.save(shopTest);
         return shopTest;
     }
-
-    @Autowired
-    private SnowflakeService snowflakeService;
 
     @GetMapping("/getIdBySnowflake")
     @LoggingFlag(logging = true)
