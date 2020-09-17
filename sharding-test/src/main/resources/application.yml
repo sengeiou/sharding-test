@@ -4,7 +4,7 @@ spring:
     active: prod
 
   application:
-    name: shading-test
+    name: sharding-test
 
   redis:
     database: 0

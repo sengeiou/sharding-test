@@ -31,12 +31,13 @@ public class ShardingTestApplication {
         this.bootstrap = bootstrap;
     }
     public static void main(String[] args) {
+        //		SpringApplication.run(ShardingTestApplication.class, args);
+        // 更换启动方式使log4j2.xml能够获取到springboot的配置参数
         SpringApplication app = new SpringApplication(ShardingTestApplication.class);
         Set<ApplicationListener<?>> ls = app.getListeners();
         ApplicationStartedEventListener asel = new ApplicationStartedEventListener();
         app.addListeners(asel);
         app.run(args);
-//		SpringApplication.run(ShardingTestApplication.class, args);
         log.debug("====================<<<<< debug level open !!  >>>>> ============================");
         log.info("====================<<<<< info level open  !!>>>>> ============================");
     }
