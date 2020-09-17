@@ -19,6 +19,7 @@ public class DefaultBusinessCodeHandler<R,E> implements BusinessCodeHandler<R,E>
         String code = getCode(allResult);
         if(code == null){
             log.error("["+apiName+"]"+"原接口返回结果没有code,res:{},param:{}",allResult,param);
+            log.error("原始返回:{}",allResult.getBodyStr());
             baseErrorHandleResult.setSimpleMsg("["+apiName+"]"+"原接口返回异常");
             baseErrorHandleResult.setType(OkHttpResponseUtils.BaseErrorHandleResult.TYPE_ERROR);
             return;
@@ -27,6 +28,7 @@ public class DefaultBusinessCodeHandler<R,E> implements BusinessCodeHandler<R,E>
         if(!successCode){
             String msg = getMsg(allResult);
             log.error("["+apiName+"]"+"原接口返回错误码,res:{},param:{}",allResult,param);
+            log.error("原始返回:{}",allResult.getBodyStr());
             baseErrorHandleResult.setSimpleMsg("["+apiName+"]"+"原接口返回错误码,msg:"+msg+",code:"+code);
             baseErrorHandleResult.setType(OkHttpResponseUtils.BaseErrorHandleResult.TYPE_OTHER);
         }

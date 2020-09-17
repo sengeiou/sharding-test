@@ -199,6 +199,18 @@ public class TestController {
         return id.getId();
     }
 
+    @GetMapping("/testLog")
+    @LoggingFlag(logging = true)
+    @SaveRequestTimeFlag
+    @ResponseBody
+    public void testLog()throws BlockException{
+        log.debug("debug");
+        log.info("info");
+        log.warn("warn");
+        log.error("error");
+    }
+
+
     public static void main(String[] args){
         watchSnowflackId();
     }

@@ -58,7 +58,10 @@ public class OkHttpResponseUtils {
             }
             return res;
         }
-
+        Headers headers = response.headers();
+        res.setHeaderStr(headers.toString());
+        res.setResponseCode(response.code());
+        res.setResponseMessage(response.message());
         String bodyStr;
         try {
             bodyStr = response.body().string();
@@ -77,6 +80,7 @@ public class OkHttpResponseUtils {
             );
             return res;
         }
+        res.setBodyStr(bodyStr);
         try {
             if (isList) {
                 List<R> jsonResList = JSONObject.parseArray(bodyStr, clazz);
@@ -153,7 +157,10 @@ public class OkHttpResponseUtils {
             }
             return res;
         }
-
+        Headers headers = response.headers();
+        res.setHeaderStr(headers.toString());
+        res.setResponseCode(response.code());
+        res.setResponseMessage(response.message());
         String bodyStr;
         try {
             bodyStr = response.body().string();
@@ -174,6 +181,7 @@ public class OkHttpResponseUtils {
             );
             return res;
         }
+        res.setBodyStr(bodyStr);
         try {
             if (isList) {
                 List<R> jsonResList = JSONObject.parseArray(bodyStr, clazz);
@@ -246,12 +254,14 @@ public class OkHttpResponseUtils {
             res.setSimpleMsg(simpleMsg);
             res.setType(BaseErrorHandleResult.TYPE_FAIL);
             log.error(simpleMsg + ",res:{},param:{}",allResult,param);
+            log.error("原始返回:{}",allResult.getBodyStr());
             return res;
         }else if (jsonResult == null){
             simpleMsg = "[" + apiName +"]" + "原接口返回值异常";
             res.setType(BaseErrorHandleResult.TYPE_ERROR);
             res.setSimpleMsg(simpleMsg);
             log.error(simpleMsg + ",res:{},param:{}",allResult,param);
+            log.error("原始返回:{}",allResult.getBodyStr());
             return res;
         }
         handler.handle(res,allResult,param,apiName);
@@ -347,6 +357,50 @@ public class OkHttpResponseUtils {
 
         // 使用了多长时间  毫秒
         private long requestTime;
+
+        // 原始body
+        private String bodyStr;
+
+        // 原始header
+        private String headerStr;
+
+        // 原始code
+        private int responseCode;
+
+        // 原始message
+        private String responseMessage;
+
+        public int getResponseCode() {
+            return responseCode;
+        }
+
+        public void setResponseCode(int responseCode) {
+            this.responseCode = responseCode;
+        }
+
+        public String getResponseMessage() {
+            return responseMessage;
+        }
+
+        public void setResponseMessage(String responseMessage) {
+            this.responseMessage = responseMessage;
+        }
+
+        public String getHeaderStr() {
+            return headerStr;
+        }
+
+        public void setHeaderStr(String headerStr) {
+            this.headerStr = headerStr;
+        }
+
+        public String getBodyStr() {
+            return bodyStr;
+        }
+
+        public void setBodyStr(String bodyStr) {
+            this.bodyStr = bodyStr;
+        }
 
         public long getRequestTime() {
             return requestTime;
@@ -476,9 +530,17 @@ public class OkHttpResponseUtils {
                         , request.toString()
                         , response.toString()
                 );
+                if (handler != null) {
+                    E handleRes = handler.handle(null, response);
+                    res.setHandleRes(handleRes);
+                }
                 successCountDown(res);
                 return;
             }
+            Headers headers = response.headers();
+            res.setHeaderStr(headers.toString());
+            res.setResponseCode(response.code());
+            res.setResponseMessage(response.message());
             if (handler != null) {
                 E handleRes = handler.handle(null, response);
                 res.setHandleRes(handleRes);
@@ -505,6 +567,7 @@ public class OkHttpResponseUtils {
                 successCountDown(res);
                 return;
             }
+            res.setBodyStr(bodyStr);
             try {
                 if (isList) {
                     List<R> jsonResList = JSONObject.parseArray(bodyStr, clazz);

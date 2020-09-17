@@ -25,5 +25,4 @@ public class PdfInputDto {
 
     // 模板
     private InputStream inputStream;
-
 }
