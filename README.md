@@ -1,4 +1,4 @@
-# sharding-test
+# springcloud通用项目模板
 从最近项目抽取的通用springcloud项目模板, 包含最近项目常用的组件并通过配置文件开关, 新开服务时方便新建项目.
 
 ## 包含组件:
